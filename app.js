@@ -2,12 +2,18 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 
+const authRoutes = require("./routes/authRoutes")
+
+
 const app = express();
 
 
 app.set('view engine', 'ejs');//  selecting ejs to serve as the templating system.
 
 app.use(express.static('public')); // directing express to a folder to use static files 
+app.use(express.json()); //allows us access to json data in body passed in with requests, has to be declared above authroutes
+app.use(authRoutes); // grants app access to created routes
+
 
 app.use(bodyParser.urlencoded({extended:true}));
 
@@ -20,7 +26,6 @@ app.listen(3000, ()=> {
     console.log("This app runs on port 8000")
 })
 
-let newTodoList = [];
 
 
 app.get('/', (req, res)=> {
