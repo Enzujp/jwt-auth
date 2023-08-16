@@ -19,11 +19,11 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 const DBURI = "mongodb+srv://jay:zuzu@cluster0.zyzefdv.mongodb.net/" //make collection names plural
 mongoose.connect(DBURI, ({useNewUrlParser: true, useUnifiedTopology: true})) // connect to database
-    .then((result) => app.listen(8000))
+    .then((result) => app.listen(8080))
     .catch((err) => console.log(err));
 
 app.listen(3000, ()=> {
-    console.log("This app runs on port 8000")
+    console.log("This app runs on port 8080")
 })
 
 
