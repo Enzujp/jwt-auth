@@ -1,33 +1,47 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
-
-const authRoutes = require("./routes/authRoutes")
-
+const express = require('express');
+const mongoose = require('mongoose');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
+// middleware
+app.use(express.static('public'));
+app.use(express.json());
 
-app.set('view engine', 'ejs');//  selecting ejs to serve as the templating system.
+// view engine
+app.set('view engine', 'ejs');
 
-app.use(express.static('public')); // directing express to a folder to use static files 
-app.use(express.json()); //allows us access to json data in body passed in with requests, has to be declared above authroutes
-app.use(authRoutes); // grants app access to created routes
+// database connection
+const dbURI = "mongodb+srv://jay:zuzu@cluster0.zyzefdv.mongodb.net/" //make collection names plural
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then((result) => app.listen(3000), console.log("This finally works baby"))
+  .catch((err) => console.log(err));
 
+// routes
+app.get('/', (req, res) => res.render('index'));
+app.get('/smoothies', (req, res) => res.render('smoothies'));
+app.use(authRoutes);
 
-app.use(bodyParser.urlencoded({extended:true}));
+// cookies
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
-const DBURI = "mongodb+srv://jay:zuzu@cluster0.zyzefdv.mongodb.net/" //make collection names plural
-mongoose.connect(DBURI, ({useNewUrlParser: true, useUnifiedTopology: true})) // connect to database
-    .then((result) => app.listen(8080))
-    .catch((err) => console.log(err));
+app.get('/set-cookies', (req, res) => {
 
-app.listen(3000, ()=> {
-    console.log("This app runs on port 8080")
-})
+  // res.setHeader('Set-Cookie', 'newUser=true');
+  
+  res.cookie('newUser', false);
+  res.cookie('isEmployee', true, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
 
+  res.send('you got the cookies!');
 
+});
 
-app.get('/', (req, res)=> {
-    res.render('index');
-})
+app.get('/read-cookies', (req, res) => {
+
+  const cookies = req.cookies; //this can be used because of the cookie-parser middleware
+  console.log(cookies.newUser);
+
+  res.json(cookies);
+
+});
