@@ -25,23 +25,3 @@ app.use(authRoutes);
 // cookies
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
-
-app.get('/set-cookies', (req, res) => {
-
-  // res.setHeader('Set-Cookie', 'newUser=true');
-  
-  res.cookie('newUser', false);
-  res.cookie('isEmployee', true, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
-
-  res.send('you got the cookies!');
-
-});
-
-app.get('/read-cookies', (req, res) => {
-
-  const cookies = req.cookies; //this can be used because of the cookie-parser middleware
-  console.log(cookies.newUser);
-
-  res.json(cookies);
-
-});

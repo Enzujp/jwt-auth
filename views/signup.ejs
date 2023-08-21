@@ -12,16 +12,27 @@
   </form>
 
   <script>
+    //select form from html doc 
     const form = document.querySelector('form');
+    // change form eventlistener 
+    form.addEventListener('submit', async (e)=> {
+      e.preventDefault(); // stop form from performing default event
 
-    form.addEventListener('submit', (e)=> {
-        e.preventDefault();//prevents default action, which is refreshing the page
-        // to extract values
+      // extract email and password values from form
+      const email = form.email.value; // reaches into form and grabs and email and then its value
+      const password = form.password.value; // reaches into form and grabs password and then its value
 
-        const email = form.email.value; //grabs field and then value
-        const password = form.password.value;
-
-        console.log(email, password);
+      try {
+        //using fetch method
+        const res = await ('/signup', {
+          method: 'POST',
+          body: JSON.stringify({ email, password }),
+          headers: {'Content-Type': 'application/json'}
+        })
+      }
+      catch(err) {
+        console.log(err);
+      }
     })
   </script>
 
