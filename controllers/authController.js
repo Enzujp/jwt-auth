@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken"); // to be used for signup
 
 // handle errors
 const handleErrors = (err) => {
@@ -23,6 +23,14 @@ const handleErrors = (err) => {
   }
 
   return errors;
+}
+
+const maxAge = 3 * 24 * 60 * 60; //setting maxage to 3 days as the values of jwt "expiresIn " must be in seconds
+
+const createToken = (id) => { // the jwt.sign method takes in the payload and a secret, the secret should be long
+  return jwt.sign({id}, 'my name is jp', {
+    expiresIn: maxAge
+  }); //the id is the payload and it is the only required value for the jwt creation
 }
 
 // controller actions
