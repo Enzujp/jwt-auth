@@ -9,4 +9,4 @@ router.get('/login', (authController.login_get));
 router.post('/login', ()=>{authController.login_post});
 
 
-module.exports = router; // makes the router and all router paths available 
+module.exports = router; // makes the router and all router paths available.

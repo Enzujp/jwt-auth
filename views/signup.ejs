@@ -1,39 +1,55 @@
 <%- include('partials/header'); -%>
 
-  <form>
-    <h2>Sign Up here</h2>
-    <label for="email">Email : </label>
-    <input type="text" name="email" id="email" required>
-    <div class="email error"></div>
-    <label for="password">Password : </label>
-    <input type="password" name="password" id="password" required>
-    <div class="password error"></div>
-    <button>Sign Up</button>
-  </form>
-
-  <script>
-    //select form from html doc 
-    const form = document.querySelector('form');
-    // change form eventlistener 
-    form.addEventListener('submit', async (e)=> {
-      e.preventDefault(); // stop form from performing default event
-
-      // extract email and password values from form
-      const email = form.email.value; // reaches into form and grabs and email and then its value
-      const password = form.password.value; // reaches into form and grabs password and then its value
-
-      try {
-        //using fetch method
-        const res = await ('/signup', {
-          method: 'POST',
-          body: JSON.stringify({ email, password }),
-          headers: {'Content-Type': 'application/json'}
-        })
-      }
-      catch(err) {
-        console.log(err);
-      }
-    })
-  </script>
+<form action="/signup">
+  <h2>Sign up</h2>
+  <label for="email">Email</label>
+  <input type="text" name="email" required />
+  <div class="email error"></div>
+  <label for="password">Password</label>
+  <input type="password" name="password" required />
+  <div class="password error"></div>
+  <button>Sign up</button>
+</form>
 
 <%- include('partials/footer'); -%>
+
+<script>
+  const form = document.querySelector('form'); // select form from html doc
+  const emailError = document.querySelector('.email.error');
+  const passwordError = document.querySelector('.password.error');
+
+
+  form.addEventListener('submit', async (e) => {// cancel default event from occuring
+    e.preventDefault();
+    // reset errors
+    emailError.textContent = '';
+    passwordError.textContent = '';
+
+    // get values
+    const email = form.email.value;
+    const password = form.password.value;
+
+    // use try, catch to extract details and assign method, body and headers.
+    try {
+      const res = await fetch('/signup', { 
+        method: 'POST', 
+        body: JSON.stringify({ email, password }),
+        headers: {'Content-Type': 'application/json'}
+      }); 
+      const data = await res.json();
+      console.log(data);
+      if (data.errors) {
+        // to output the errors, we grab them from the DOM
+        emailError.textContent = data.errors.email;
+        passwordError.textContent = data.errors.password;
+      }
+      if (data.user) { // check for user property and direct to homepage if necessary
+        location.assign('/');
+      }
+    }
+    catch (err) {
+      console.log(err);
+    }
+
+  });
+</script>
