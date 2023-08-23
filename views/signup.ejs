@@ -19,7 +19,7 @@
   const passwordError = document.querySelector('.password.error');
 
 
-  form.addEventListener('submit', async (e) => {// cancel default event from occuring
+  form.addEventListener('submit', async (e) => {// cancel default event from occuring so as to write personalized functions
     e.preventDefault();
     // reset errors
     emailError.textContent = '';

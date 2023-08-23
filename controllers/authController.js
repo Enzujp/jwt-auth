@@ -20,6 +20,16 @@ const handleErrors = (err) => {
       // console.log(properties);
       errors[properties.path] = properties.message;
     });
+
+    // incorrect email
+    if (err.message === "Incorrect Email Address Entered") {
+      errors.email = "That email is not registered"
+    }
+
+    // incorrect password
+    if (err.message === "Incorrect Passoword") {
+      err.password = "Your Password is Incorrect."
+    }
   }
 
   return errors;
@@ -27,6 +37,7 @@ const handleErrors = (err) => {
 
 const maxAge = 3 * 24 * 60 * 60; //setting maxage to 3 days as the values of jwt "expiresIn " must be in seconds
 
+// create jwt 
 const createToken = (id) => { // the jwt.sign method takes in the payload and a secret, the secret should be long
   return jwt.sign({id}, 'my name is jp', {
     expiresIn: maxAge
@@ -43,7 +54,7 @@ module.exports.login_get = (req, res) => {
 }
 
 module.exports.signup_post = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body; // extract values of email and password from req.body, using body-parser module
  
   try {
     const user = await User.create({ email, password });
@@ -62,6 +73,18 @@ module.exports.signup_post = async (req, res) => {
 module.exports.login_post = async (req, res) => {
   const { email, password } = req.body;
 
-  console.log(email, password);
-  res.send('user login');
-}
+  try {
+    const user = await User.login(email, password);
+    const token = createToken(user._id); // create user token using jwt 
+    // return cookie with jwt, token and options passed in.
+    res.cookie('jwt', token, { maxAge: maxAge * 1000, httpOnly: true });
+    
+    res.status(200).json({user: user._id});
+    
+  }
+
+  catch (err) {
+    const errors = handleErrors(err);
+    res.status(400).json({ errors });
+  }
+  }
