@@ -26,7 +26,7 @@ const checkUser = (req, res, next) => {
     const token = req.cookies.jwt;
 
     if (token) { // check for token
-        jwt.token(token, 'my name os jp', async (err, decodedToken) => { // verify token
+        jwt.verify(token, 'my name os jp', async (err, decodedToken) => { // verify token
             if (err) {
                 console.log(err.message);
                 res.locals.user = null; // explicitly setting user property to null, as we would check it later in views
