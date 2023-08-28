@@ -1,4 +1,5 @@
-const User = require("../models/User");
+const User = require("../models/User"); // can be written as
+// import User from "../models/User";
 const jwt = require("jsonwebtoken"); // to be used for signup
 
 // handle errors
