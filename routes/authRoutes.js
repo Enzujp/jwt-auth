@@ -11,4 +11,4 @@ router.get('/logout', (authController.logout_get));
 
 
 module.exports = router; // makes the router and all router paths available.
-// please ensure your routes are well written, to save yourself an hour of going round to fix a bug in strange places
+// please ensure your routes are well written, to save yourself an hour of going round to fix a bug in strange places.
